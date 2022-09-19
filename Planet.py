@@ -8,6 +8,13 @@ class Planet:
         self.__velocity = kwargs['velocity']
         self.__acceleration = kwargs['acceleration']
 
+    def __eq__(self, other):
+        if not isinstance(other, Planet):
+            return NotImplemented
+
+        return self.mass == other.mass and self.point == other.point \
+               and self.velocity == other.velocity and self.acceleration == other.acceleration
+
     @property
     def mass(self):
         return self.__mass
@@ -40,14 +47,7 @@ class Planet:
     def acceleration(self, acceleration) -> None:
         self.__acceleration = acceleration
 
-    def __eq__(self, other):
-        if not isinstance(other, Planet):
-            return NotImplemented
-
-        return self.mass == other.mass and self.point == other.point \
-               and self.velocity == other.velocity and self.acceleration == other.acceleration
-
-    def calculateStep(self, time: float, dt: float, planets, scheme: int = 0):
+    def calculateStep(self, time: float, dt: float, planets, scheme: int = 0) -> None:
         """
         :param dt: Шаг по времени
         :param planets: Все планеты
@@ -56,9 +56,10 @@ class Planet:
         :return: None
         """
         if scheme == Utils.SCHEMES.EULER:
-            acceleration = Utils.Acceleration(0, 0, 0)
+            self.acceleration = Utils.Acceleration(0, 0, 0)
             for planet in planets:
                 if self == planet:
                     continue
-                acceleration += Utils.Acceleration.calculateAcceleration(self.point, planet.point)
-            self.velocity.x += acceleration.x * dt
+                self.acceleration += Utils.Acceleration.calculateAcceleration(self.point, planet.point)
+            self.point.updatePointRelativeToVelocityAndAcceleration(self.velocity, dt, self.acceleration)
+            self.velocity.updateVelocityRelativeToAcceleration(self.acceleration, dt)

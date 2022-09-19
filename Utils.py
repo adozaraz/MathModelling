@@ -58,13 +58,20 @@ class Point(Characteristic):
         return math.sqrt((firstPoint.x - secondPoint.x) ** 2 +
                          (firstPoint.y - secondPoint.y) ** 2 + (firstPoint.z - secondPoint.z) ** 2)
 
+    def updatePointRelativeToVelocityAndAcceleration(self, velocity, dt, acceleration) -> None:
+        self.x += velocity.x * dt + acceleration.x * dt ** 2
+        self.y += velocity.y * dt + acceleration.y * dt ** 2
+        self.z += velocity.z * dt + acceleration.z * dt ** 2
+
 
 class Velocity(Characteristic):
-    pass
+    def updateVelocityRelativeToAcceleration(self, acceleration, dt):
+        self.x += acceleration.x * dt
+        self.y += acceleration.y * dt
+        self.z += acceleration.z * dt
 
 
 class Acceleration(Characteristic):
-
     def recalculateAcceleration(self, acceleration, radius, point):
         self.x += acceleration * (self.x - point.x) / radius
         self.y += acceleration * (self.y - point.y) / radius
