@@ -3,6 +3,7 @@ from matplotlib import animation
 import matplotlib
 from Utils import *
 from Planet import Planet
+
 matplotlib.use("TkAgg")
 AU = 1.5e11
 
@@ -18,13 +19,10 @@ class SolarSystem:
         self.fig = plt.figure(figsize=(10, 10))
         self.ax = plt.axes(projection='3d')
         self.ax.axis('auto')
-        self.axis_size = 5
+        self.axis_size = 10
         self.ax.set_xlim(-self.axis_size * AU, self.axis_size * AU)
         self.ax.set_ylim(-self.axis_size * AU, self.axis_size * AU)
         self.ax.set_zlim(-self.axis_size * AU, self.axis_size * AU)
-        self.x = []
-        self.y = []
-        self.z = []
 
     def calculateStep(self):
         if self.scheme == SCHEMES.EULER:
@@ -34,19 +32,26 @@ class SolarSystem:
                     if secondPlanet == planet:
                         continue
                     acceleration += Acceleration.calculateAcceleration(planet, secondPlanet)
-                planet.point.updatePointRelativeToVelocityAndAcceleration(planet.velocity, self.dt, acceleration)
+                planet.updatePointRelativeToVelocityAndAcceleration(planet.velocity, self.dt, acceleration)
                 planet.velocity.updateVelocityRelativeToAcceleration(acceleration, self.dt)
 
     def updateCanvas(self, i):
         self.calculateStep()
-        self.ax.clear()
         for planet in self.planets:
-            print(planet)
-            self.ax.plot([planet.point.x], [planet.point.y], [planet.point.z], marker='o', markersize=7, markeredgecolor="black", markerfacecolor="black")
+            planet.update()
+    def show(self):
+        for planet in self.planets:
+            planet.plotPoint = self.ax.plot([planet.point.x], [planet.point.y], [planet.point.z], marker='o', markersize=7,
+                         markeredgecolor="black", markerfacecolor="black")
+        ani = animation.FuncAnimation(self.fig, self.updateCanvas, frames=self.timeLimit)
+        plt.show()
 
 
 if __name__ in "__main__":
-    solarSystem = SolarSystem([Planet(name="Earth", mass=100, point=Point(), velocity=Velocity()),
-                               Planet(name="Mars", mass=1000, point=Point(4, 4, 4), velocity=Velocity(AU, 0, 0))])
-    ani = animation.FuncAnimation(solarSystem.fig, solarSystem.updateCanvas, interval=100)
-    plt.show()
+    solarSystem = SolarSystem(planets=[Planet(name="Earth", mass=1.2166E30, point=Point(), velocity=Velocity()),
+                                       Planet(name="Mars", mass=6.083E24, point=Point(149500000000, 0, 0),
+                                              velocity=Velocity(0, 23297.8704870374, 0)),
+                                       Planet(name="Mars", mass=6.083E24, point=Point(-149500000000, 0, 0),
+                                              velocity=Velocity(0, 23297.87048703))],
+                              dt=3600, timeLimit=31536000)
+    solarSystem.show()

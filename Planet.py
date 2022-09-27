@@ -7,6 +7,8 @@ class Planet:
         self.__mass = kwargs['mass']
         self.__point = kwargs['point']
         self.__velocity = kwargs['velocity']
+        self.__line = [[self.point.x], [self.point.y], [self.point.z]]
+        self.plotPoint = None
 
     def __eq__(self, other):
         if not isinstance(other, Planet):
@@ -33,6 +35,10 @@ class Planet:
     def name(self):
         return self.__name
 
+    @property
+    def line(self):
+        return self.__line
+
     @mass.setter
     def mass(self, mass) -> None:
         self.__mass = mass
@@ -44,3 +50,12 @@ class Planet:
     @velocity.setter
     def velocity(self, velocity) -> None:
         self.__velocity = velocity
+
+    def update(self):
+        self.plotPoint[0].set_data_3d(self.point.x, self.point.y, self.point.z)
+
+    def updatePointRelativeToVelocityAndAcceleration(self, velocity, dt, acceleration) -> None:
+        self.point.updatePointRelativeToVelocityAndAcceleration(velocity, dt, acceleration)
+        self.__line[0].append(self.point.x)
+        self.__line[1].append(self.point.x)
+        self.__line[2].append(self.point.x)
