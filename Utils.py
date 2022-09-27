@@ -27,6 +27,9 @@ class Characteristic:
 
         return type(self) == type(other) and self.x == other.x and self.y == other.y and self.z == other.z
 
+    def __str__(self):
+        return f'({self.x}, {self.y}, {self.z})'
+
     @property
     def x(self) -> float:
         return self.__x
@@ -81,5 +84,5 @@ class Acceleration(Characteristic):
     def calculateAcceleration(planet, otherPlanet):
         r = Point.calculateScalarDistance(planet.point, otherPlanet.point)
         a = planet.mass * G / (r ** 2)
-        return Acceleration(x=a * (planet.x - otherPlanet.x) / r, y=a * (planet.y - otherPlanet.y) / r,
-                            z=a * (planet.z - otherPlanet.z) / r)
+        return Acceleration(x=a * (planet.point.x - otherPlanet.point.x) / r, y=a * (planet.point.y - otherPlanet.point.y) / r,
+                            z=a * (planet.point.z - otherPlanet.point.z) / r)

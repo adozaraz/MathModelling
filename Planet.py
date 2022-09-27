@@ -14,6 +14,9 @@ class Planet:
 
         return self.name == other.name
 
+    def __str__(self):
+        return f'{self.__name}:\nMass: {self.__mass}\nPoint: {self.point}\nVelocity: {self.velocity}'
+
     @property
     def mass(self):
         return self.__mass
