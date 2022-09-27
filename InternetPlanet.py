@@ -1,4 +1,3 @@
-# %%
 G = 6.67e-11
 Mb = 4.0e30  # black hole
 Ms = 2.0e30  # sun
@@ -26,8 +25,8 @@ xm, ym, zm = 1.666 * AU, 0, 0
 xvm, yvm, zvm = 0, m_ap_v, 0
 
 # comet
-xc, yc, zc = 2 * AU, 0.3 * AU, 0
-xvc, yvc, zvc = 0, commet_v, 0
+xc, yc, zc = 2 * AU, 0, 0
+xvc, yvc, zvc = 0, commet_v, 3000
 
 # sun
 xs, ys, zs = 0, 0, 0
@@ -132,71 +131,94 @@ print('data ready')
 # print(xalist,yalist)
 
 
+# %%
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
-import matplotlib
 
-matplotlib.rcParams['animation.embed_limit'] = 2 ** 128
-matplotlib.use("TkAgg")
+fig = plt.figure(figsize=(10, 10))
+ax = plt.axes(projection='3d')
+ax.axis('auto')
 
-fig, ax = plt.subplots(figsize=(10, 10))
-ax.set_aspect('equal')
-ax.grid()
+axis_size = 2.5
+ax.set_xlim(-axis_size * AU, axis_size * AU)
+ax.set_ylim(-axis_size * AU, axis_size * AU)
+ax.set_zlim(-axis_size * AU, axis_size * AU)
 
-line_e, = ax.plot([], [], '-g', lw=1)
-point_e, = ax.plot([AU], [0], marker="o", markersize=4, markeredgecolor="blue", markerfacecolor="blue")
-text_e = ax.text(AU, 0, 'Earth')
+# ax.set_aspect('auto')
+# ax.grid()
+datadict = {}
+dataset_s = [xslist, yslist, zslist]
+dataset_e = [xelist, yelist, zelist]
+dataset_m = [xmlist, ymlist, zmlist]
+dataset_c = [xclist, yclist, zclist]
+datadict['s'] = dataset_s
+datadict['e'] = dataset_e
+datadict['m'] = dataset_m
+datadict['c'] = dataset_c
 
-line_m, = ax.plot([], [], '-g', lw=1)
-point_m, = ax.plot([1.666 * AU], [0], marker="o", markersize=3, markeredgecolor="red", markerfacecolor="red")
-text_m = ax.text(1.666 * AU, 0, 'Mars')
+vis_dict = {}
+# sun
+line_s, = ax.plot([0], [0], [0], '-g', lw=1)
+point_s, = ax.plot([AU], [0], [0], marker="o", markersize=7, markeredgecolor="yellow", markerfacecolor="yellow")
+text_s = ax.text(AU, 0, 0, 'Sun')
+vis_dict['s'] = [line_s, point_s, text_s]
 
-line_c, = ax.plot([], [], '-g', lw=1)
-point_c, = ax.plot([2 * AU], [0], marker="o", markersize=2, markeredgecolor="black", markerfacecolor="black")
-text_c = ax.text(2 * AU, 0, 'Comet')
+# earth
+line_e, = ax.plot([0], [0], [0], '-g', lw=1)
+point_e, = ax.plot([AU], [0], [0], marker="o", markersize=4, markeredgecolor="blue", markerfacecolor="blue")
+text_e = ax.text(AU, 0, 0, 'Earth')
+vis_dict['e'] = [line_e, point_e, text_e]
 
-point_s, = ax.plot([0], [0], marker="o", markersize=7, markeredgecolor="yellow", markerfacecolor="yellow")
-text_s = ax.text(0, 0, 'Sun')
+# mars 
+line_m, = ax.plot([0], [0], [0], '-g', lw=1)
+point_m, = ax.plot([AU], [0], [0], marker="o", markersize=4, markeredgecolor="red", markerfacecolor="red")
+text_m = ax.text(AU, 0, 0, 'Mars')
+vis_dict['m'] = [line_m, point_m, text_m]
 
-exdata, eydata = [], []  # earth track
-sxdata, sydata = [], []  # sun track
-mxdata, mydata = [], []  # mars track
-cxdata, cydata = [], []
-
-print(len(xelist))
-
-
-def update(i):
-    exdata.append(xelist[i])
-    eydata.append(yelist[i])
-
-    mxdata.append(xmlist[i])
-    mydata.append(ymlist[i])
-
-    cxdata.append(xclist[i])
-    cydata.append(yclist[i])
-
-    line_e.set_data(exdata, eydata)
-    point_e.set_data(xelist[i], yelist[i])
-    text_e.set_position((xelist[i], yelist[i]))
-
-    line_m.set_data(mxdata, mydata)
-    point_m.set_data(xmlist[i], ymlist[i])
-    text_m.set_position((xmlist[i], ymlist[i]))
-
-    line_c.set_data(cxdata, cydata)
-    point_c.set_data(xclist[i], yclist[i])
-    text_c.set_position((xclist[i], yclist[i]))
-
-    point_s.set_data(xslist[i], yslist[i])
-    text_s.set_position((xslist[i], yslist[i]))
-
-    ax.axis('equal')
-    ax.set_xlim(-3 * AU, 3 * AU)
-    ax.set_ylim(-3 * AU, 3 * AU)
-    # print(i)
-    return line_e, point_s, point_e, line_m, point_m, text_e, text_m, text_s, line_c, point_c, text_c
+# comet
+line_c, = ax.plot([0], [0], [0], '-g', lw=1)
+point_c, = ax.plot([AU], [0], [0], marker="o", markersize=4, markeredgecolor="black", markerfacecolor="black")
+text_c = ax.text(AU, 0, 0, 'comet')
+vis_dict['c'] = [line_c, point_c, text_c]
 
 
-anim = animation.FuncAnimation(fig, func=update, frames=len(xelist), interval=1, blit=True)
+def update(num, data_dict, vis_dict):
+    # sun 
+    dataset_s = data_dict['s']
+    line_s, point_s, text_s = vis_dict['s'][0], vis_dict['s'][1], vis_dict['s'][2]
+    line_s.set_data_3d(dataset_s[0][:num], dataset_s[1][:num], dataset_s[2][:num])
+    point_s.set_data_3d(dataset_s[0][num], dataset_s[1][num], dataset_s[2][num])
+    text_s.set_position((dataset_s[0][num], dataset_s[1][num], dataset_s[2][num]))
+
+    # earth 
+    dataset_e = data_dict['e']
+    line_e, point_e, text_e = vis_dict['e'][0], vis_dict['e'][1], vis_dict['e'][2]
+    line_e.set_data_3d(dataset_e[0][:num], dataset_e[1][:num], dataset_e[2][:num])
+    point_e.set_data_3d(dataset_e[0][num], dataset_e[1][num], dataset_e[2][num])
+    text_e.set_position((dataset_e[0][num], dataset_e[1][num], dataset_e[2][num]))
+
+    # mars
+    dataset_m = data_dict['m']
+    line_m, point_m, text_m = vis_dict['m'][0], vis_dict['m'][1], vis_dict['m'][2]
+    line_m.set_data_3d(dataset_m[0][:num], dataset_m[1][:num], dataset_m[2][:num])
+    point_m.set_data_3d(dataset_m[0][num], dataset_m[1][num], dataset_m[2][num])
+    text_m.set_position((dataset_m[0][num], dataset_m[1][num], dataset_m[2][num]))
+
+    # mars
+    dataset_c = data_dict['c']
+    line_c, point_c, text_c = vis_dict['c'][0], vis_dict['c'][1], vis_dict['c'][2]
+    line_c.set_data_3d(dataset_c[0][:num], dataset_c[1][:num], dataset_c[2][:num])
+    point_c.set_data_3d(dataset_c[0][num], dataset_c[1][num], dataset_c[2][num])
+    text_c.set_position((dataset_c[0][num], dataset_c[1][num], dataset_c[2][num]))
+
+
+ani = animation.FuncAnimation(
+    fig
+    , update
+    , len(xelist)
+    , fargs=(datadict, vis_dict)
+    , interval=1
+)
+
 plt.show()
