@@ -10,7 +10,7 @@ class SCHEMES(Enum):
 
 
 class Characteristic:
-    def __init__(self, x: float = 0, y: float = 0, z: float = 0):
+    def __init__(self, x: float = 0., y: float = 0., z: float = 0.):
         self.__x: float = x
         self.__y: float = y
         self.__z: float = z

@@ -7,6 +7,7 @@ class Planet:
         self.__point = kwargs['point']
         self.__velocity = kwargs['velocity']
         self.__acceleration = kwargs['acceleration']
+        self.__line = kwargs['line']
 
     def __eq__(self, other):
         if not isinstance(other, Planet):
