@@ -84,5 +84,6 @@ class Acceleration(Characteristic):
     def calculateAcceleration(planet, otherPlanet):
         r = Point.calculateScalarDistance(planet.point, otherPlanet.point)
         a = planet.mass * G / (r ** 2)
-        return Acceleration(x=a * (planet.point.x - otherPlanet.point.x) / r, y=a * (planet.point.y - otherPlanet.point.y) / r,
+        return Acceleration(x=a * (planet.point.x - otherPlanet.point.x) / r,
+                            y=a * (planet.point.y - otherPlanet.point.y) / r,
                             z=a * (planet.point.z - otherPlanet.point.z) / r)

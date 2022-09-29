@@ -53,9 +53,3 @@ class Planet:
 
     def update(self):
         self.plotPoint[0].set_data_3d(self.point.x, self.point.y, self.point.z)
-
-    def updatePointRelativeToVelocityAndAcceleration(self, velocity, dt, acceleration) -> None:
-        self.point.updatePointRelativeToVelocityAndAcceleration(velocity, dt, acceleration)
-        self.__line[0].append(self.point.x)
-        self.__line[1].append(self.point.x)
-        self.__line[2].append(self.point.x)
