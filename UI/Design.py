@@ -10,6 +10,13 @@ class MainWindow(QMainWindow, UiMainWindow):
         QMainWindow.__init__(self)
 
         self.setupUi(self)
+        self.pushButton.clicked.connect(self.plot_data)
+
+    def plot_data(self):
+        x = range(0, 10)
+        y = range(0, 20, 2)
+        self.MplWidget.canvas.ax.plot(x, y)
+        self.MplWidget.canvas.draw()
 
 
 class PlanetNumberChooser(QMainWindow, UiPlanetNumberChooser):

@@ -9,6 +9,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from UI.mplwidget import MplWidget
 
 
 class UiMainWindow(object):
@@ -34,9 +35,9 @@ class UiMainWindow(object):
         font.setFamily("Montserrat")
         self.currentTime.setFont(font)
         self.currentTime.setObjectName("currentTime")
-        self.pyplotGraph = QtWidgets.QWidget(self.centralwidget)
-        self.pyplotGraph.setGeometry(QtCore.QRect(10, 10, 531, 541))
-        self.pyplotGraph.setObjectName("pyplotGraph")
+        self.MplWidget = MplWidget(self.centralwidget)
+        self.MplWidget.setGeometry(QtCore.QRect(10, 10, 531, 541))
+        self.MplWidget.setObjectName("MplWidget")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton.setGeometry(QtCore.QRect(620, 530, 121, 23))
         font = QtGui.QFont()
