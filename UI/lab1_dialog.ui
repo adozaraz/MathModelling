@@ -10,6 +10,12 @@
     <height>81</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
@@ -22,6 +28,11 @@
      <height>32</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+    </font>
+   </property>
    <property name="orientation">
     <enum>Qt::Horizontal</enum>
    </property>
@@ -29,7 +40,7 @@
     <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
    </property>
   </widget>
-  <widget class="QSpinBox" name="spinBox">
+  <widget class="QSpinBox" name="planetCount">
    <property name="geometry">
     <rect>
      <x>170</x>
@@ -37,6 +48,11 @@
      <width>42</width>
      <height>22</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+    </font>
    </property>
   </widget>
   <widget class="QLabel" name="label">
@@ -47,6 +63,11 @@
      <width>141</width>
      <height>16</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+    </font>
    </property>
    <property name="text">
     <string>Количество планет</string>
@@ -63,7 +84,7 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout"/>
   </widget>
-  <zorder>spinBox</zorder>
+  <zorder>planetCount</zorder>
   <zorder>label</zorder>
   <zorder>buttonBox</zorder>
   <zorder>verticalLayoutWidget</zorder>

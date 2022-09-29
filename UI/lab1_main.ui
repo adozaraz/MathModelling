@@ -10,6 +10,12 @@
     <height>600</height>
    </rect>
   </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
@@ -17,17 +23,22 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>570</x>
+      <x>560</x>
       <y>10</y>
-      <width>81</width>
+      <width>91</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Montserrat</family>
+     </font>
     </property>
     <property name="text">
      <string>Текущее время</string>
     </property>
    </widget>
-   <widget class="QTextBrowser" name="textBrowser">
+   <widget class="QTextBrowser" name="currentTime">
     <property name="geometry">
      <rect>
       <x>660</x>
@@ -36,15 +47,38 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="font">
+     <font>
+      <family>Montserrat</family>
+     </font>
+    </property>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="pyplotGraph" native="true">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>551</width>
+      <width>531</width>
       <height>541</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>530</y>
+      <width>121</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Montserrat</family>
+     </font>
+    </property>
+    <property name="text">
+     <string>Начать симуляцию</string>
     </property>
    </widget>
   </widget>
@@ -58,36 +92,61 @@
     </rect>
    </property>
    <widget class="QMenu" name="menu">
+    <property name="font">
+     <font>
+      <family>Montserrat</family>
+     </font>
+    </property>
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="action"/>
-    <addaction name="action_2"/>
-    <addaction name="action_3"/>
+    <addaction name="newSystem"/>
+    <addaction name="saveSystem"/>
+    <addaction name="openSystem"/>
     <addaction name="separator"/>
-    <addaction name="action_5"/>
+    <addaction name="planetParameters"/>
    </widget>
    <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action">
+  <action name="newSystem">
    <property name="text">
     <string>Новая система</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+    </font>
+   </property>
   </action>
-  <action name="action_2">
+  <action name="saveSystem">
    <property name="text">
     <string>Сохранить</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+    </font>
+   </property>
   </action>
-  <action name="action_3">
+  <action name="openSystem">
    <property name="text">
     <string>Открыть</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+    </font>
+   </property>
   </action>
-  <action name="action_5">
+  <action name="planetParameters">
    <property name="text">
     <string>Параметры планет</string>
+   </property>
+   <property name="font">
+    <font>
+     <family>Montserrat</family>
+    </font>
    </property>
   </action>
  </widget>
