@@ -8,8 +8,14 @@ matplotlib.use('QT5Agg')
 
 class MplCanvas(Canvas):
     def __init__(self):
+        AU = 1.5e11
         self.fig = Figure()
-        self.ax = self.fig.add_subplot(111)
+        self.ax = self.fig.add_subplot(111, projection='3d')
+        self.ax.axis('auto')
+        self.axis_size = 10
+        self.ax.set_xlim(-self.axis_size * AU, self.axis_size * AU)
+        self.ax.set_ylim(-self.axis_size * AU, self.axis_size * AU)
+        self.ax.set_zlim(-self.axis_size * AU, self.axis_size * AU)
         Canvas.__init__(self, self.fig)
         Canvas.setSizePolicy(self, QSizePolicy.Expanding, QSizePolicy.Expanding)
         Canvas.updateGeometry(self)
