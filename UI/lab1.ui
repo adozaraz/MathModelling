@@ -156,26 +156,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QTextEdit" name="dt">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>10</y>
-     <width>104</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="timeLimit">
-   <property name="geometry">
-    <rect>
-     <x>150</x>
-     <y>50</y>
-     <width>104</width>
-     <height>31</height>
-    </rect>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
@@ -216,6 +196,26 @@
    </property>
    <property name="text">
     <string>Время моделирования</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="dt">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>19</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="timeLimit">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>59</y>
+     <width>113</width>
+     <height>21</height>
+    </rect>
    </property>
   </widget>
  </widget>

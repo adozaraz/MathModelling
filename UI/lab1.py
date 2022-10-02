@@ -83,12 +83,6 @@ class UiPlanetSettings(object):
         self.Biman.setFont(font)
         self.Biman.setObjectName("Biman")
         self.verticalLayout_2.addWidget(self.Biman)
-        self.dt = QtWidgets.QTextEdit(Dialog)
-        self.dt.setGeometry(QtCore.QRect(150, 10, 104, 31))
-        self.dt.setObjectName("dt")
-        self.timeLimit = QtWidgets.QTextEdit(Dialog)
-        self.timeLimit.setGeometry(QtCore.QRect(150, 50, 104, 31))
-        self.timeLimit.setObjectName("timeLimit")
         self.label_2 = QtWidgets.QLabel(Dialog)
         self.label_2.setGeometry(QtCore.QRect(10, 10, 101, 31))
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
@@ -106,6 +100,12 @@ class UiPlanetSettings(object):
         font.setFamily("Montserrat")
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
+        self.dt = QtWidgets.QLineEdit(Dialog)
+        self.dt.setGeometry(QtCore.QRect(160, 19, 113, 21))
+        self.dt.setObjectName("dt")
+        self.timeLimit = QtWidgets.QLineEdit(Dialog)
+        self.timeLimit.setGeometry(QtCore.QRect(160, 59, 113, 21))
+        self.timeLimit.setObjectName("timeLimit")
 
         self.retranslateUi(Dialog)
         self.buttonBox.accepted.connect(Dialog.accept)
@@ -137,5 +137,3 @@ class UiPlanetSettings(object):
         self.Biman.setText(_translate("Dialog", "Бимана"))
         self.label_2.setText(_translate("Dialog", "Шаг по времени"))
         self.label_3.setText(_translate("Dialog", "Время моделирования"))
-
-
