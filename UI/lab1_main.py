@@ -11,7 +11,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from UI.mplwidget import MplWidget
 
-
 class UiMainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -23,18 +22,6 @@ class UiMainWindow(object):
         MainWindow.setSizePolicy(sizePolicy)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(560, 10, 91, 31))
-        font = QtGui.QFont()
-        font.setFamily("Montserrat")
-        self.label.setFont(font)
-        self.label.setObjectName("label")
-        self.currentTime = QtWidgets.QTextBrowser(self.centralwidget)
-        self.currentTime.setGeometry(QtCore.QRect(660, 10, 131, 31))
-        font = QtGui.QFont()
-        font.setFamily("Montserrat")
-        self.currentTime.setFont(font)
-        self.currentTime.setObjectName("currentTime")
         self.MplWidget = MplWidget(self.centralwidget)
         self.MplWidget.setGeometry(QtCore.QRect(10, 10, 531, 541))
         self.MplWidget.setObjectName("MplWidget")
@@ -90,7 +77,6 @@ class UiMainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
-        self.label.setText(_translate("MainWindow", "Текущее время"))
         self.pushButton.setText(_translate("MainWindow", "Начать симуляцию"))
         self.menu.setTitle(_translate("MainWindow", "Файл"))
         self.newSystem.setText(_translate("MainWindow", "Новая система"))

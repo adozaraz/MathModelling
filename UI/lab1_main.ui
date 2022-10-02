@@ -20,39 +20,6 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>560</x>
-      <y>10</y>
-      <width>91</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Montserrat</family>
-     </font>
-    </property>
-    <property name="text">
-     <string>Текущее время</string>
-    </property>
-   </widget>
-   <widget class="QTextBrowser" name="currentTime">
-    <property name="geometry">
-     <rect>
-      <x>660</x>
-      <y>10</y>
-      <width>131</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Montserrat</family>
-     </font>
-    </property>
-   </widget>
    <widget class="MplWidget" name="MplWidget" native="true">
     <property name="geometry">
      <rect>
