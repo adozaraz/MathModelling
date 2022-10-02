@@ -25,6 +25,7 @@ class PlanetNumberChooser(QMainWindow, UiPlanetNumberChooser):
         QMainWindow.__init__(self)
         self.setupUi(self)
         self.buttonBox.accepted.connect(self.confirm)
+        self.buttonBox.rejected.connect(self.close)
 
     def confirm(self):
         self.submitClicked.emit(self.planetCount.value())
@@ -33,9 +34,11 @@ class PlanetNumberChooser(QMainWindow, UiPlanetNumberChooser):
 class PlanetSettings(QMainWindow, UiPlanetSettings):
     submitClicked = pyqtSignal(list)
 
-    def __init__(self, planetNumber=4):
+    def __init__(self, planetNumber=2):
         UiPlanetSettings.__init__(self)
         QMainWindow.__init__(self)
+        print('started')
+        self.newSystem = True
         self.planetNumber = planetNumber
         self.solarSystem = SolarSystem()
         self.setupUi(self)
@@ -43,12 +46,38 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
         self.populateTable()
         self.setValidators()
         self.populateFields()
+        self.Euler.toggle()
 
     def confirm(self):
-        self.submitClicked.emit()
+        self.solarSystem.dt = float(self.dt.text())
+        self.timeLimit = float(self.timeLimit.text())
+        for row in range(self.planetNumber):
+            if self.newSystem:
+                self.solarSystem.planets.append(Planet(name=self.planetsTable.item(row, 0).text(),
+                                                       mass=float(self.planetsTable.item(row, 7).text()),
+                                                       point=Point(float(self.planetsTable.item(row, 1).text()),
+                                                                   float(self.planetsTable.item(row, 2).text()),
+                                                                   float(self.planetsTable.item(row, 3).text())),
+                                                       velocity=Velocity(float(self.planetsTable.item(row, 4).text()),
+                                                                         float(self.planetsTable.item(row, 5).text()),
+                                                                         float(self.planetsTable.item(row, 6).text()))))
+            else:
+                self.solarSystem.planets[row].mass = float(self.planetsTable.item(row, 7).text())
+                self.solarSystem.planets[row].point = Point(float(self.planetsTable.item(row, 1).text()),
+                                                            float(self.planetsTable.item(row, 2).text()),
+                                                            float(self.planetsTable.item(row, 3).text()))
+                self.solarSystem.planets[row].velocity = Velocity(float(self.planetsTable.item(row, 4).text()),
+                                                                  float(self.planetsTable.item(row, 5).text()),
+                                                                  float(self.planetsTable.item(row, 6).text()))
+        self.newSystem = False
+        self.close()
+
+    def cancel(self):
+        self.close()
 
     def setupEvents(self):
         self.buttonBox.accepted.connect(self.confirm)
+        self.buttonBox.rejected.connect(self.cancel)
         self.Biman.toggled.connect(self.setBiman)
         self.Euler.toggled.connect(self.setEuler)
         self.Verle.toggled.connect(self.setVerle)
@@ -71,22 +100,36 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
         self.timeLimit.setValidator(validator)
 
     def populateFields(self):
-        self.dt.setText(self.solarSystem.dt)
-        self.timeLimit.setText(self.solarSystem.timeLimit)
+        self.dt.setText(str(self.solarSystem.dt))
+        self.timeLimit.setText(str(self.solarSystem.timeLimit))
 
     def populateTable(self):
-        self.planetsTable.setRowCount(self.planetNumber)
         tablerow = 0
-        for planet in self.solarSystem.planets:
-            self.planetsTable.setItem(tablerow, 0, QTableWidgetItem(tablerow + 1))
-            self.planetsTable.setItem(tablerow, 1, QTableWidgetItem(planet.point.x))
-            self.planetsTable.setItem(tablerow, 2, QTableWidgetItem(planet.point.y))
-            self.planetsTable.setItem(tablerow, 3, QTableWidgetItem(planet.point.z))
-            self.planetsTable.setItem(tablerow, 4, QTableWidgetItem(planet.velocity.x))
-            self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(planet.velocity.y))
-            self.planetsTable.setItem(tablerow, 6, QTableWidgetItem(planet.velocity.z))
-            self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(planet.mass))
-            tablerow += 1
+        if self.newSystem:
+            self.planetsTable.setRowCount(self.planetNumber)
+            self.solarSystem.planets = []
+            for i in range(self.planetNumber):
+                self.planetsTable.setItem(tablerow, 0, QTableWidgetItem(str(tablerow + 1)))
+                self.planetsTable.setItem(tablerow, 1, QTableWidgetItem(str(i * 1E9)))
+                self.planetsTable.setItem(tablerow, 2, QTableWidgetItem(str(0)))
+                self.planetsTable.setItem(tablerow, 3, QTableWidgetItem(str(0)))
+                self.planetsTable.setItem(tablerow, 4, QTableWidgetItem(str(0)))
+                self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(30000 - 1000 * i)))
+                self.planetsTable.setItem(tablerow, 6, QTableWidgetItem(str(0)))
+                self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(str(1.2166E30 - 1E29 * i)))
+                tablerow += 1
+        else:
+            self.planetsTable.setRowCount(len(self.solarSystem.planets))
+            for planet in self.solarSystem.planets:
+                self.planetsTable.setItem(tablerow, 0, QTableWidgetItem(planet.name))
+                self.planetsTable.setItem(tablerow, 1, QTableWidgetItem(planet.point.x))
+                self.planetsTable.setItem(tablerow, 2, QTableWidgetItem(planet.point.y))
+                self.planetsTable.setItem(tablerow, 3, QTableWidgetItem(planet.point.z))
+                self.planetsTable.setItem(tablerow, 4, QTableWidgetItem(planet.velocity.x))
+                self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(planet.velocity.y))
+                self.planetsTable.setItem(tablerow, 6, QTableWidgetItem(planet.velocity.z))
+                self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(planet.mass))
+                tablerow += 1
 
         delegate = ReadOnlyDelegate(self.planetsTable)
         self.planetsTable.setItemDelegateForColumn(0, delegate)
@@ -100,18 +143,21 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.anim = None
         self.dialog = PlanetNumberChooser()
         self.planetSettingsWindow = PlanetSettings()
-        self.dialog.submitClicked.connect(self.onPlanetNumberConfirm)
-        self.planetSettingsWindow.submitClicked.connect(self.onPlanetSettingsConfirm)
 
         self.setupUi(self)
         self.setupButtonFunctions()
+        self.setupEvents()
+
+    def setupEvents(self):
+        self.dialog.submitClicked.connect(self.onPlanetNumber)
+        self.planetSettingsWindow.submitClicked.connect(self.onPlanetSettings)
 
     def setupButtonFunctions(self):
         self.pushButton.clicked.connect(self.plot_data)
-        self.newSystem.clicked.connect(self.showChooser)
-        self.saveSystem.clicked.connect(self.saveModelParameters)
-        self.openSystem.clicked.connect(self.openModelParametersFromFile)
-        self.planetParameters.clicked.connect(self.openModelParametersChangerWindow)
+        self.newSystem.triggered.connect(self.showChooser)
+        self.saveSystem.triggered.connect(self.saveModelParameters)
+        self.openSystem.triggered.connect(self.openModelParametersFromFile)
+        self.planetParameters.triggered.connect(self.openModelParametersChangerWindow)
 
     def plot_data(self):
         for planet in self.planetSettingsWindow.solarSystem.planets:
@@ -130,12 +176,14 @@ class MainWindow(QMainWindow, UiMainWindow):
     def showChooser(self):
         self.dialog.show()
 
-    def onPlanetNumberConfirm(self, number):
+    def onPlanetNumber(self, number):
         self.dialog.hide()
         self.planetSettingsWindow.planetNumber = int(number)
+        self.planetSettingsWindow.newSystem = True
+        self.planetSettingsWindow.populateTable()
         self.planetSettingsWindow.show()
 
-    def onPlanetSettingsConfirm(self):
+    def onPlanetSettings(self, number):
         self.planetSettingsWindow.hide()
 
     def saveModelParameters(self):

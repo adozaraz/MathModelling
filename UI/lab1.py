@@ -108,8 +108,6 @@ class UiPlanetSettings(object):
         self.timeLimit.setObjectName("timeLimit")
 
         self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):

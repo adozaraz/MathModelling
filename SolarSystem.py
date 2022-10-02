@@ -21,8 +21,12 @@ class SolarSystem:
                     if secondPlanet == planet:
                         continue
                     acceleration += Acceleration.calculateAcceleration(secondPlanet, planet)
-                planet.point.updatePointRelativeToVelocityAndAcceleration(planet.velocity, self.dt, acceleration)
-                planet.velocity.updateVelocityRelativeToAcceleration(acceleration, self.dt)
+                planet.point = Point(planet.point.x + planet.velocity.x * self.dt + acceleration.x * self.dt ** 2,
+                                     planet.point.y + planet.velocity.y * self.dt + acceleration.y * self.dt ** 2,
+                                     planet.point.z + planet.velocity.z * self.dt + acceleration.z * self.dt ** 2)
+                planet.velocity = Velocity(acceleration.x * self.dt,
+                                           acceleration.y * self.dt,
+                                           acceleration.z * self.dt)
 
     def updateCanvas(self, i):
         self.calculateStep()

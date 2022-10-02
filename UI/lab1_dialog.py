@@ -52,8 +52,6 @@ class UiPlanetNumberChooser(object):
         self.verticalLayoutWidget.raise_()
 
         self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):

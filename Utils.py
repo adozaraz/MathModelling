@@ -61,11 +61,6 @@ class Point(Characteristic):
         return math.sqrt((firstPoint.x - secondPoint.x) ** 2 +
                          (firstPoint.y - secondPoint.y) ** 2 + (firstPoint.z - secondPoint.z) ** 2)
 
-    def updatePointRelativeToVelocityAndAcceleration(self, velocity, dt, acceleration) -> None:
-        self.x += velocity.x * dt + acceleration.x * dt ** 2
-        self.y += velocity.y * dt + acceleration.y * dt ** 2
-        self.z += velocity.z * dt + acceleration.z * dt ** 2
-
 
 class Velocity(Characteristic):
     def updateVelocityRelativeToAcceleration(self, acceleration, dt):
@@ -75,11 +70,6 @@ class Velocity(Characteristic):
 
 
 class Acceleration(Characteristic):
-    def recalculateAcceleration(self, acceleration, radius, point):
-        self.x += acceleration * (self.x - point.x) / radius
-        self.y += acceleration * (self.y - point.y) / radius
-        self.z += acceleration * (self.z - point.z) / radius
-
     @staticmethod
     def calculateAcceleration(planet, otherPlanet):
         r = Point.calculateScalarDistance(planet.point, otherPlanet.point)
