@@ -122,13 +122,13 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
             self.planetsTable.setRowCount(len(self.solarSystem.planets))
             for planet in self.solarSystem.planets:
                 self.planetsTable.setItem(tablerow, 0, QTableWidgetItem(planet.name))
-                self.planetsTable.setItem(tablerow, 1, QTableWidgetItem(planet.point.x))
-                self.planetsTable.setItem(tablerow, 2, QTableWidgetItem(planet.point.y))
-                self.planetsTable.setItem(tablerow, 3, QTableWidgetItem(planet.point.z))
-                self.planetsTable.setItem(tablerow, 4, QTableWidgetItem(planet.velocity.x))
-                self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(planet.velocity.y))
-                self.planetsTable.setItem(tablerow, 6, QTableWidgetItem(planet.velocity.z))
-                self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(planet.mass))
+                self.planetsTable.setItem(tablerow, 1, QTableWidgetItem(str(planet.point.x)))
+                self.planetsTable.setItem(tablerow, 2, QTableWidgetItem(str(planet.point.y)))
+                self.planetsTable.setItem(tablerow, 3, QTableWidgetItem(str(planet.point.z)))
+                self.planetsTable.setItem(tablerow, 4, QTableWidgetItem(str(planet.velocity.x)))
+                self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(planet.velocity.y)))
+                self.planetsTable.setItem(tablerow, 6, QTableWidgetItem(str(planet.velocity.z)))
+                self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(str(planet.mass)))
                 tablerow += 1
 
         delegate = ReadOnlyDelegate(self.planetsTable)
@@ -203,36 +203,51 @@ class MainWindow(QMainWindow, UiMainWindow):
         if self.anim is not None:
             self.anim.pause()
             self.initCanvas()
-        name = QFileDialog.getSaveFileName(self, 'Сохранить файл')
-        if name:
-            with open(name, 'w+') as f:
+        name = QFileDialog.getSaveFileName(self, 'Сохранить систему', '', '*.ussr')
+        if name[0] != '':
+            with open(f'{name[0]}.ussr', 'w+') as f:
                 f.write(str(len(self.planetSettingsWindow.solarSystem.planets)))
+                f.write('\n')
                 f.write(str(self.planetSettingsWindow.solarSystem.timeLimit))
+                f.write('\n')
                 f.write(str(self.planetSettingsWindow.solarSystem.dt))
+                f.write('\n')
                 f.write(str(self.planetSettingsWindow.solarSystem.scheme))
+                f.write('\n')
                 for planet in self.planetSettingsWindow.solarSystem.planets:
                     f.write(
                         f'{planet.name} {planet.mass} {planet.point.x} {planet.point.y} {planet.point.z} {planet.velocity.x} {planet.velocity.y} {planet.velocity.z}')
+                    f.write('\n')
 
     def openModelParametersFromFile(self):
         if self.anim is not None:
             self.anim.pause()
             self.initCanvas()
-        name = QFileDialog.getOpenFileName(self, "Открыть систему")
-        with open(name, 'r') as f:
-            self.planetSettingsWindow.planetNumber = int(f.readline())
-            self.planetSettingsWindow.solarSystem.timeLimit = int(f.readline())
-            self.planetSettingsWindow.solarSystem.dt = int(f.readline())
-            self.planetSettingsWindow.solarSystem.scheme = f.readline()
-            for i in range(self.planetSettingsWindow.planetNumber):
-                settings = f.readline().strip('\n').split(' ')
-                self.planetSettingsWindow.solarSystem.planets.append(Planet(name=settings[0], mass=float(settings[1]),
-                                                                            point=Point(float(settings[2]),
-                                                                                        float(settings[3]),
-                                                                                        float(settings[4])),
-                                                                            velocity=Velocity(float(settings[5]),
-                                                                                              float(settings[6]),
-                                                                                              float(settings[7]))))
+        name = QFileDialog.getOpenFileName(self, 'Открыть систему', '', '*.ussr')
+        if name[0] != '':
+            with open(name[0], 'r') as f:
+                self.planetSettingsWindow.planetNumber = int(f.readline())
+                self.planetSettingsWindow.solarSystem.timeLimit = float(f.readline())
+                self.planetSettingsWindow.solarSystem.dt = float(f.readline())
+                scheme = f.readline()
+                if scheme == 'SCHEMES.EULER':
+                    self.planetSettingsWindow.solarSystem.scheme = SCHEMES.EULER
+                elif scheme == 'SCHEMES.BIMAN':
+                    self.planetSettingsWindow.solarSystem.scheme = SCHEMES.BIMAN
+                elif scheme == 'SCHEMES.VERLET':
+                    self.planetSettingsWindow.solarSystem.scheme = SCHEMES.VERLET
+                for i in range(self.planetSettingsWindow.planetNumber):
+                    settings = f.readline().strip('\n').split(' ')
+                    self.planetSettingsWindow.solarSystem.planets.append(
+                        Planet(name=settings[0], mass=float(settings[1]),
+                               point=Point(float(settings[2]),
+                                           float(settings[3]),
+                                           float(settings[4])),
+                               velocity=Velocity(float(settings[5]),
+                                                 float(settings[6]),
+                                                 float(settings[7]))))
+            self.planetSettingsWindow.newSystem = False
+            self.planetSettingsWindow.populateTable()
 
     def openModelParametersChangerWindow(self):
         if self.anim is not None:
