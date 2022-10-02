@@ -50,7 +50,7 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
 
     def confirm(self):
         self.solarSystem.dt = float(self.dt.text())
-        self.timeLimit = float(self.timeLimit.text())
+        self.solarSystem.timeLimit = float(self.timeLimit.text())
         for row in range(self.planetNumber):
             if self.newSystem:
                 self.solarSystem.planets.append(Planet(name=self.planetsTable.item(row, 0).text(),
@@ -160,10 +160,20 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.planetParameters.triggered.connect(self.openModelParametersChangerWindow)
 
     def plot_data(self):
+        if self.anim is not None:
+            self.anim.pause()
+            self.initCanvas()
+        first = True
         for planet in self.planetSettingsWindow.solarSystem.planets:
-            planet.plotPoint = self.MplWidget.canvas.ax.plot([planet.point.x], [planet.point.y], [planet.point.z],
-                                                             marker='o', markersize=7,
-                                                             markeredgecolor="black", markerfacecolor="black")
+            if first:
+                planet.plotPoint = self.MplWidget.canvas.ax.plot([planet.point.x], [planet.point.y], [planet.point.z],
+                                                                 marker='o', markersize=10,
+                                                                 markeredgecolor="black", markerfacecolor="red")
+                first = False
+            else:
+                planet.plotPoint = self.MplWidget.canvas.ax.plot([planet.point.x], [planet.point.y], [planet.point.z],
+                                                                 marker='o', markersize=7,
+                                                                 markeredgecolor="black", markerfacecolor="black")
         self.planetSettingsWindow.solarSystem.frameText = self.MplWidget.canvas.ax.text2D(0.05, 0.95,
                                                                                           f'Frame: 0/{int(self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt)}',
                                                                                           transform=self.MplWidget.canvas.ax.transAxes)
@@ -174,6 +184,9 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.MplWidget.canvas.draw()
 
     def showChooser(self):
+        if self.anim is not None:
+            self.anim.pause()
+            self.initCanvas()
         self.dialog.show()
 
     def onPlanetNumber(self, number):
@@ -187,17 +200,24 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.planetSettingsWindow.hide()
 
     def saveModelParameters(self):
+        if self.anim is not None:
+            self.anim.pause()
+            self.initCanvas()
         name = QFileDialog.getSaveFileName(self, 'Сохранить файл')
-        with open(name, 'w+') as f:
-            f.write(str(len(self.planetSettingsWindow.solarSystem.planets)))
-            f.write(str(self.planetSettingsWindow.solarSystem.timeLimit))
-            f.write(str(self.planetSettingsWindow.solarSystem.dt))
-            f.write(str(self.planetSettingsWindow.solarSystem.scheme))
-            for planet in self.planetSettingsWindow.solarSystem.planets:
-                f.write(
-                    f'{planet.name} {planet.mass} {planet.point.x} {planet.point.y} {planet.point.z} {planet.velocity.x} {planet.velocity.y} {planet.velocity.z}')
+        if name:
+            with open(name, 'w+') as f:
+                f.write(str(len(self.planetSettingsWindow.solarSystem.planets)))
+                f.write(str(self.planetSettingsWindow.solarSystem.timeLimit))
+                f.write(str(self.planetSettingsWindow.solarSystem.dt))
+                f.write(str(self.planetSettingsWindow.solarSystem.scheme))
+                for planet in self.planetSettingsWindow.solarSystem.planets:
+                    f.write(
+                        f'{planet.name} {planet.mass} {planet.point.x} {planet.point.y} {planet.point.z} {planet.velocity.x} {planet.velocity.y} {planet.velocity.z}')
 
     def openModelParametersFromFile(self):
+        if self.anim is not None:
+            self.anim.pause()
+            self.initCanvas()
         name = QFileDialog.getOpenFileName(self, "Открыть систему")
         with open(name, 'r') as f:
             self.planetSettingsWindow.planetNumber = int(f.readline())
@@ -215,4 +235,21 @@ class MainWindow(QMainWindow, UiMainWindow):
                                                                                               float(settings[7]))))
 
     def openModelParametersChangerWindow(self):
+        if self.anim is not None:
+            self.anim.pause()
+            self.initCanvas()
         self.planetSettingsWindow.show()
+
+    def initCanvas(self):
+        self.anim = None
+        AU = 1.5e11
+        self.MplWidget.canvas.ax.clear()
+        self.MplWidget.canvas.ax = self.MplWidget.canvas.fig.add_subplot(111, projection='3d')
+        self.MplWidget.canvas.ax.axis('auto')
+        axis_size = 10
+        self.MplWidget.canvas.ax.set_xlim(-axis_size * AU, axis_size * AU)
+        self.MplWidget.canvas.ax.set_ylim(-axis_size * AU, axis_size * AU)
+        self.MplWidget.canvas.ax.set_zlim(-axis_size * AU, axis_size * AU)
+        self.MplWidget.canvas.ax.set_xlabel('x')
+        self.MplWidget.canvas.ax.set_ylabel('y')
+        self.MplWidget.canvas.ax.set_zlabel('z')
