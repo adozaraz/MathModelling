@@ -250,7 +250,7 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.planetSettingsWindow.solarSystem.frameText = self.MplWidget.canvas.ax.text2D(0.05, 0.95,
                                                                                           f'Frame: 0/{int(self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt)}',
                                                                                           transform=self.MplWidget.canvas.ax.transAxes)
-        self.anim = FuncAnimation(self.MplWidget, self.planetSettingsWindow.solarSystem.updateCanvas,
+        self.anim = FuncAnimation(self.MplWidget, self.updateData,
                                   frames=int(
                                       self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt),
                                   repeat=False)
@@ -268,3 +268,24 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.MplWidget.canvas.ax.set_zlim(-axis_size * AU, axis_size * AU)
         self.MplWidget.canvas.ax.set_xlabel('x')
         self.MplWidget.canvas.ax.set_ylabel('y')
+
+    def updateData(self, i):
+        self.planetSettingsWindow.solarSystem.updateCanvas(i)
+        self.calculateMassCenter()
+
+    def calculateMassCenter(self):
+        planetMass = 0
+        xc = 0
+        yc = 0
+        zc = 0
+        for planet in self.planetSettingsWindow.solarSystem.planets:
+            planetMass += planet.mass
+            xc += planet.mass * planet.point.x
+            yc += planet.mass * planet.point.y
+            zc += planet.mass * planet.point.z
+        xc /= planetMass
+        yc /= planetMass
+        zc /= planetMass
+        self.textBrowser.setText(str(xc))
+        self.textBrowser_2.setText(str(yc))
+        self.textBrowser_3.setText(str(zc))
