@@ -1,6 +1,3 @@
-from Planet import Planet
-from SolarSystem import SolarSystem
-from Utils import *
 from PyQt5.QtWidgets import QApplication
 from UI.Design import MainWindow
 import sys

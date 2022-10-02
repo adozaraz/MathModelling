@@ -1,6 +1,3 @@
-import Utils
-
-
 class Planet:
     def __init__(self, **kwargs):
         self.__name = kwargs['name']

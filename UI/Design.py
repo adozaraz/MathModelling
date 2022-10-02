@@ -147,7 +147,7 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.setupUi(self)
         self.setupButtonFunctions()
         self.setupEvents()
-
+    # Setup functions
     def setupEvents(self):
         self.dialog.submitClicked.connect(self.onPlanetNumber)
         self.planetSettingsWindow.submitClicked.connect(self.onPlanetSettings)
@@ -158,37 +158,7 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.saveSystem.triggered.connect(self.saveModelParameters)
         self.openSystem.triggered.connect(self.openModelParametersFromFile)
         self.planetParameters.triggered.connect(self.openModelParametersChangerWindow)
-
-    def plot_data(self):
-        if self.anim is not None:
-            self.anim.pause()
-            self.initCanvas()
-        first = True
-        for planet in self.planetSettingsWindow.solarSystem.planets:
-            if first:
-                planet.plotPoint = self.MplWidget.canvas.ax.plot([planet.point.x], [planet.point.y], [planet.point.z],
-                                                                 marker='o', markersize=10,
-                                                                 markeredgecolor="black", markerfacecolor="red")
-                first = False
-            else:
-                planet.plotPoint = self.MplWidget.canvas.ax.plot([planet.point.x], [planet.point.y], [planet.point.z],
-                                                                 marker='o', markersize=7,
-                                                                 markeredgecolor="black", markerfacecolor="black")
-        self.planetSettingsWindow.solarSystem.frameText = self.MplWidget.canvas.ax.text2D(0.05, 0.95,
-                                                                                          f'Frame: 0/{int(self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt)}',
-                                                                                          transform=self.MplWidget.canvas.ax.transAxes)
-        self.anim = FuncAnimation(self.MplWidget, self.planetSettingsWindow.solarSystem.updateCanvas,
-                                  frames=int(
-                                      self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt),
-                                  repeat=False)
-        self.MplWidget.canvas.draw()
-
-    def showChooser(self):
-        if self.anim is not None:
-            self.anim.pause()
-            self.initCanvas()
-        self.dialog.show()
-
+    # Event Functions
     def onPlanetNumber(self, number):
         self.dialog.hide()
         self.planetSettingsWindow.planetNumber = int(number)
@@ -198,6 +168,13 @@ class MainWindow(QMainWindow, UiMainWindow):
 
     def onPlanetSettings(self, number):
         self.planetSettingsWindow.hide()
+
+    # Button functions
+    def showChooser(self):
+        if self.anim is not None:
+            self.anim.pause()
+            self.initCanvas()
+        self.dialog.show()
 
     def saveModelParameters(self):
         if self.anim is not None:
@@ -254,6 +231,30 @@ class MainWindow(QMainWindow, UiMainWindow):
             self.anim.pause()
             self.initCanvas()
         self.planetSettingsWindow.show()
+    # Other functions
+    def plot_data(self):
+        if self.anim is not None:
+            self.anim.pause()
+            self.initCanvas()
+        first = True
+        for planet in self.planetSettingsWindow.solarSystem.planets:
+            if first:
+                planet.plotPoint = self.MplWidget.canvas.ax.plot([planet.point.x], [planet.point.y], [planet.point.z],
+                                                                 marker='o', markersize=10,
+                                                                 markeredgecolor="black", markerfacecolor="red")
+                first = False
+            else:
+                planet.plotPoint = self.MplWidget.canvas.ax.plot([planet.point.x], [planet.point.y], [planet.point.z],
+                                                                 marker='o', markersize=7,
+                                                                 markeredgecolor="black", markerfacecolor="black")
+        self.planetSettingsWindow.solarSystem.frameText = self.MplWidget.canvas.ax.text2D(0.05, 0.95,
+                                                                                          f'Frame: 0/{int(self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt)}',
+                                                                                          transform=self.MplWidget.canvas.ax.transAxes)
+        self.anim = FuncAnimation(self.MplWidget, self.planetSettingsWindow.solarSystem.updateCanvas,
+                                  frames=int(
+                                      self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt),
+                                  repeat=False)
+        self.MplWidget.canvas.draw()
 
     def initCanvas(self):
         self.anim = None
@@ -267,4 +268,3 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.MplWidget.canvas.ax.set_zlim(-axis_size * AU, axis_size * AU)
         self.MplWidget.canvas.ax.set_xlabel('x')
         self.MplWidget.canvas.ax.set_ylabel('y')
-        self.MplWidget.canvas.ax.set_zlabel('z')
