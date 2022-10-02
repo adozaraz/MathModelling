@@ -7,7 +7,6 @@ class Planet:
         self.__mass = kwargs['mass']
         self.__point = kwargs['point']
         self.__velocity = kwargs['velocity']
-        self.__line = [[self.point.x], [self.point.y], [self.point.z]]
         self.plotPoint = None
 
     def __eq__(self, other):
@@ -34,10 +33,6 @@ class Planet:
     @property
     def name(self):
         return self.__name
-
-    @property
-    def line(self):
-        return self.__line
 
     @mass.setter
     def mass(self, mass) -> None:

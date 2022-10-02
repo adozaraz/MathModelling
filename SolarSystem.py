@@ -11,6 +11,7 @@ class SolarSystem:
         self.timeLimit = timeLimit
         self.dt = dt
         self.scheme = scheme
+        self.frameText = None
 
     def calculateStep(self):
         if self.scheme == SCHEMES.EULER:
@@ -25,5 +26,6 @@ class SolarSystem:
 
     def updateCanvas(self, i):
         self.calculateStep()
+        self.frameText.set_text(f'Frame: {i}/{self.timeLimit / self.dt}')
         for planet in self.planets:
             planet.update()
