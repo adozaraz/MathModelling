@@ -4,7 +4,7 @@ from Utils import Point, Velocity, Acceleration
 class Planet:
     def __init__(self, **kwargs):
         self.__name = kwargs.get('name', '1')
-        self.__mass = kwargs.get('mass', 0)
+        self.__mass = kwargs.get('mass', 1)
         self.__point = kwargs.get('point', Point())
         self.__velocity = kwargs.get('velocity', Velocity())
         self.__prevPoint = None
