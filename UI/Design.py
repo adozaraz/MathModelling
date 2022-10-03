@@ -110,11 +110,11 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
             self.solarSystem.planets = []
             for i in range(self.planetNumber):
                 self.planetsTable.setItem(tablerow, 0, QTableWidgetItem(str(tablerow + 1)))
-                self.planetsTable.setItem(tablerow, 1, QTableWidgetItem(str(i * 1E9)))
+                self.planetsTable.setItem(tablerow, 1, QTableWidgetItem(str(149500000000 * i)))
                 self.planetsTable.setItem(tablerow, 2, QTableWidgetItem(str(0)))
                 self.planetsTable.setItem(tablerow, 3, QTableWidgetItem(str(0)))
                 self.planetsTable.setItem(tablerow, 4, QTableWidgetItem(str(0)))
-                self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(30000 - 1000 * i)))
+                self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(30000 * abs(1 - 2 ** i) - 1000 * i)))
                 self.planetsTable.setItem(tablerow, 6, QTableWidgetItem(str(0)))
                 self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(str(1.2166E30 - 1E29 * i)))
                 tablerow += 1

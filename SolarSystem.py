@@ -31,14 +31,17 @@ class SolarSystem:
                 planet.point = Point(planet.point.x + planet.velocity.x * self.dt + acceleration.x * self.dt ** 2,
                                      planet.point.y + planet.velocity.y * self.dt + acceleration.y * self.dt ** 2,
                                      planet.point.z + planet.velocity.z * self.dt + acceleration.z * self.dt ** 2)
+                planet.velocity = Velocity(planet.velocity.x + acceleration.x * self.dt,
+                                           planet.velocity.y + acceleration.y * self.dt,
+                                           planet.velocity.z + acceleration.z * self.dt)
             else:
                 prevPoint = planet.point
                 planet.point = Point(planet.point.x + planet.velocity.x * self.dt,
                                      planet.point.y + planet.velocity.y * self.dt,
                                      planet.point.z + planet.velocity.z * self.dt)
-                planet.velocity = Velocity(acceleration.x * self.dt,
-                                           acceleration.y * self.dt,
-                                           acceleration.z * self.dt)
+                planet.velocity = Velocity(planet.velocity.x + acceleration.x * self.dt,
+                                           planet.velocity.y + acceleration.y * self.dt,
+                                           planet.velocity.z + acceleration.z * self.dt)
                 planet.prevPoint = prevPoint
 
     def updateCanvas(self, i):
