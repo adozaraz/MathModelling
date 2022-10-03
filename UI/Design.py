@@ -274,21 +274,15 @@ class MainWindow(QMainWindow, UiMainWindow):
 
     def updateData(self, i):
         self.planetSettingsWindow.solarSystem.updateCanvas(i)
-        self.calculateMassCenter()
+        self.calculateAndDisplayMassCenter()
+        self.calculateAndDisplayEnergy()
 
-    def calculateMassCenter(self):
-        planetMass = 0
-        xc = 0
-        yc = 0
-        zc = 0
-        for planet in self.planetSettingsWindow.solarSystem.planets:
-            planetMass += planet.mass
-            xc += planet.mass * planet.point.x
-            yc += planet.mass * planet.point.y
-            zc += planet.mass * planet.point.z
-        xc /= planetMass
-        yc /= planetMass
-        zc /= planetMass
+    def calculateAndDisplayMassCenter(self):
+        xc, yc, zc = self.planetSettingsWindow.solarSystem.calculateMassCenter()
         self.textBrowser.setText(str(xc))
         self.textBrowser_2.setText(str(yc))
         self.textBrowser_3.setText(str(zc))
+
+    def calculateAndDisplayEnergy(self):
+        energy = self.planetSettingsWindow.solarSystem.calculateUniversalEnergy()
+        self.textBrowser_4.setText(str(energy))
