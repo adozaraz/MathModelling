@@ -6,7 +6,7 @@ from scipy.constants import G
 class SCHEMES(Enum):
     EULER = 0
     VERLET = 1
-    BIMAN = 2
+    EULER_KRAMER = 2
 
 
 class Characteristic:
@@ -63,10 +63,7 @@ class Point(Characteristic):
 
 
 class Velocity(Characteristic):
-    def updateVelocityRelativeToAcceleration(self, acceleration, dt):
-        self.x += acceleration.x * dt
-        self.y += acceleration.y * dt
-        self.z += acceleration.z * dt
+    pass
 
 
 class Acceleration(Characteristic):

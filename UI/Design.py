@@ -78,13 +78,13 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
     def setupEvents(self):
         self.buttonBox.accepted.connect(self.confirm)
         self.buttonBox.rejected.connect(self.cancel)
-        self.Biman.toggled.connect(self.setBiman)
+        self.EulerKramer.toggled.connect(self.setEulerKramer)
         self.Euler.toggled.connect(self.setEuler)
         self.Verle.toggled.connect(self.setVerle)
 
-    def setBiman(self, enabled):
+    def setEulerKramer(self, enabled):
         if enabled:
-            self.solarSystem.scheme = SCHEMES.BIMAN
+            self.solarSystem.scheme = SCHEMES.EULER_KRAMER
 
     def setEuler(self, enabled):
         if enabled:
@@ -147,6 +147,7 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.setupUi(self)
         self.setupButtonFunctions()
         self.setupEvents()
+
     # Setup functions
     def setupEvents(self):
         self.dialog.submitClicked.connect(self.onPlanetNumber)
@@ -158,6 +159,7 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.saveSystem.triggered.connect(self.saveModelParameters)
         self.openSystem.triggered.connect(self.openModelParametersFromFile)
         self.planetParameters.triggered.connect(self.openModelParametersChangerWindow)
+
     # Event Functions
     def onPlanetNumber(self, number):
         self.dialog.hide()
@@ -231,6 +233,7 @@ class MainWindow(QMainWindow, UiMainWindow):
             self.anim.pause()
             self.initCanvas()
         self.planetSettingsWindow.show()
+
     # Other functions
     def plot_data(self):
         if self.anim is not None:

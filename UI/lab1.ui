@@ -143,14 +143,14 @@
      </widget>
     </item>
     <item>
-     <widget class="QRadioButton" name="Biman">
+     <widget class="QRadioButton" name="EulerKramer">
       <property name="font">
        <font>
         <family>Montserrat</family>
        </font>
       </property>
       <property name="text">
-       <string>Бимана</string>
+       <string>Эйлера-Крамера</string>
       </property>
      </widget>
     </item>
