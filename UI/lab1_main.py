@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from UI.mplwidget import MplWidget
 
 
+
 class UiMainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -60,7 +61,7 @@ class UiMainWindow(object):
         self.textBrowser_3.setGeometry(QtCore.QRect(644, 85, 141, 31))
         self.textBrowser_3.setObjectName("textBrowser_3")
         self.textBrowser_4 = QtWidgets.QTextBrowser(self.centralwidget)
-        self.textBrowser_4.setGeometry(QtCore.QRect(644, 124, 140, 31))
+        self.textBrowser_4.setGeometry(QtCore.QRect(644, 124, 151, 31))
         self.textBrowser_4.setObjectName("textBrowser_4")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
         self.label_4.setGeometry(QtCore.QRect(550, 129, 100, 21))
