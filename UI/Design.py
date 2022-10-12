@@ -250,13 +250,15 @@ class MainWindow(QMainWindow, UiMainWindow):
                 planet.plotPoint = self.MplWidget.canvas.ax.plot([planet.point.x], [planet.point.y], [planet.point.z],
                                                                  marker='o', markersize=7,
                                                                  markeredgecolor="black", markerfacecolor="black")
+            self.planetSettingsWindow.solarSystem.blit.append(planet.plotPoint[0])
         self.planetSettingsWindow.solarSystem.frameText = self.MplWidget.canvas.ax.text2D(0.05, 0.95,
                                                                                           f'Frame: 0/{int(self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt)}',
                                                                                           transform=self.MplWidget.canvas.ax.transAxes)
+        self.planetSettingsWindow.solarSystem.blit.append(self.planetSettingsWindow.solarSystem.frameText)
         self.anim = FuncAnimation(self.MplWidget, self.updateData,
                                   frames=int(
                                       self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt),
-                                  repeat=False)
+                                  repeat=False, blit=True)
         self.MplWidget.canvas.draw()
 
     def initCanvas(self):
@@ -273,9 +275,10 @@ class MainWindow(QMainWindow, UiMainWindow):
         self.MplWidget.canvas.ax.set_ylabel('y')
 
     def updateData(self, i):
-        self.planetSettingsWindow.solarSystem.updateCanvas(i)
+        artists = self.planetSettingsWindow.solarSystem.updateCanvas(i)
         self.calculateAndDisplayMassCenter()
         self.calculateAndDisplayEnergy()
+        return artists
 
     def calculateAndDisplayMassCenter(self):
         xc, yc, zc = self.planetSettingsWindow.solarSystem.calculateMassCenter()

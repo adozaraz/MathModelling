@@ -2,8 +2,11 @@ from PyQt5.QtWidgets import QWidget, QSizePolicy, QVBoxLayout
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as Canvas
 import matplotlib
+import matplotlib.style as mplstyle
 
-matplotlib.use('QT5Agg')
+matplotlib.use('TKAgg')
+mplstyle.use('fast')
+
 
 
 class MplCanvas(Canvas):
