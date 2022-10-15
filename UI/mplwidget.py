@@ -11,7 +11,7 @@ mplstyle.use('fast')
 
 class MplCanvas(Canvas):
     def __init__(self):
-        AU = 1.5e11
+        AU = 1.5e10
         self.fig = Figure()
         self.ax = self.fig.add_subplot(111, projection='3d')
         self.ax.axis('auto')

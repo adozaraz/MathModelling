@@ -1,5 +1,5 @@
 from Utils import *
-
+import copy
 
 class SolarSystem:
     def __init__(self, planets=None, timeLimit=1E20, dt=3600, scheme=SCHEMES.EULER):
@@ -14,36 +14,37 @@ class SolarSystem:
 
     def calculateStep(self):
         acceleration = Acceleration()
+        planetsCopy = copy.deepcopy(self.planets)
         for planet in self.planets:
-            for secondPlanet in self.planets:
+            for secondPlanet in planetsCopy:
                 if secondPlanet == planet:
                     continue
                 acceleration += Acceleration.calculateAcceleration(secondPlanet, planet)
+            prevPoint = planet.point
             if self.scheme == SCHEMES.VERLET and planet.prevPoint is not None:
-                prevPoint = planet.point
-                planet.point = Point(2*planet.point.x - planet.prevPoint.x + acceleration.x * self.dt ** 2,
-                                     2*planet.point.y - planet.prevPoint.y + acceleration.y * self.dt ** 2,
-                                     2*planet.point.z - planet.prevPoint.z + acceleration.z * self.dt ** 2)
-                planet.velocity = Velocity((planet.point.x - 2 * planet.prevPoint.x) / 2,
-                                           (planet.point.x - 2 * planet.prevPoint.x) / 2,
-                                           (planet.point.x - 2 * planet.prevPoint.x) / 2)
+                planet.point = Point(2*prevPoint.x - planet.prevPoint.x + acceleration.x * self.dt ** 2,
+                                     2*prevPoint.y - planet.prevPoint.y + acceleration.y * self.dt ** 2,
+                                     2*prevPoint.z - planet.prevPoint.z + acceleration.z * self.dt ** 2)
+                planet.velocity = Velocity((prevPoint.x - 2 * planet.prevPoint.x) / 2,
+                                           (prevPoint.x - 2 * planet.prevPoint.x) / 2,
+                                           (prevPoint.x - 2 * planet.prevPoint.x) / 2)
                 planet.prevPoint = prevPoint
             elif self.scheme == SCHEMES.EULER_KRAMER:
-                planet.point = Point(planet.point.x + planet.velocity.x * self.dt + acceleration.x * self.dt ** 2,
-                                     planet.point.y + planet.velocity.y * self.dt + acceleration.y * self.dt ** 2,
-                                     planet.point.z + planet.velocity.z * self.dt + acceleration.z * self.dt ** 2)
+                planet.point = Point(prevPoint.x + planet.velocity.x * self.dt + acceleration.x * self.dt ** 2,
+                                     prevPoint.y + planet.velocity.y * self.dt + acceleration.y * self.dt ** 2,
+                                     prevPoint.z + planet.velocity.z * self.dt + acceleration.z * self.dt ** 2)
                 planet.velocity = Velocity(planet.velocity.x + acceleration.x * self.dt,
                                            planet.velocity.y + acceleration.y * self.dt,
                                            planet.velocity.z + acceleration.z * self.dt)
             else:
-                prevPoint = planet.point
-                planet.point = Point(planet.point.x + planet.velocity.x * self.dt,
-                                     planet.point.y + planet.velocity.y * self.dt,
-                                     planet.point.z + planet.velocity.z * self.dt)
+                planet.point = Point(prevPoint.x + planet.velocity.x * self.dt,
+                                     prevPoint.y + planet.velocity.y * self.dt,
+                                     prevPoint.z + planet.velocity.z * self.dt)
                 planet.velocity = Velocity(planet.velocity.x + acceleration.x * self.dt,
                                            planet.velocity.y + acceleration.y * self.dt,
                                            planet.velocity.z + acceleration.z * self.dt)
-                planet.prevPoint = prevPoint
+            planet.prevPoint = prevPoint
+            acceleration = Acceleration()
 
     def updateCanvas(self, i):
         self.calculateStep()

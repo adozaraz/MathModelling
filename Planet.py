@@ -8,7 +8,6 @@ class Planet:
         self.__point = kwargs.get('point', Point())
         self.__velocity = kwargs.get('velocity', Velocity())
         self.__prevPoint = None
-        self.plotPoint = None
 
     def __eq__(self, other):
         if not isinstance(other, Planet):
