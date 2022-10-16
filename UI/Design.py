@@ -1,3 +1,4 @@
+from IPython.external.qt_for_kernel import QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QDoubleValidator
 from PyQt5.QtWidgets import QMainWindow, QFileDialog, QTableWidgetItem, QStyledItemDelegate
@@ -9,6 +10,7 @@ from UI.lab1_dialog import UiPlanetNumberChooser
 from UI.lab1_main import UiMainWindow
 from SolarSystem import SolarSystem
 from Utils import Point, Velocity, SCHEMES
+from UI.mplwidget import MplWidget
 
 
 class ReadOnlyDelegate(QStyledItemDelegate):
@@ -140,6 +142,7 @@ class MainWindow(QMainWindow, UiMainWindow):
         UiMainWindow.__init__(self)
         QMainWindow.__init__(self)
 
+        self.isRunning = False
         self.anim = None
         self.dialog = PlanetNumberChooser()
         self.planetSettingsWindow = PlanetSettings()
@@ -173,15 +176,17 @@ class MainWindow(QMainWindow, UiMainWindow):
 
     # Button functions
     def showChooser(self):
-        if self.anim is not None:
+        if self.isRunning:
             self.anim.pause()
-            self.initCanvas()
+            self.clearAxes()
+            self.isRunning = False
         self.dialog.show()
 
     def saveModelParameters(self):
-        if self.anim is not None:
+        if self.isRunning:
             self.anim.pause()
-            self.initCanvas()
+            self.clearAxes()
+            self.isRunning = False
         name = QFileDialog.getSaveFileName(self, 'Сохранить систему', '', '*.ussr')
         if name[0] != '':
             with open(f'{name[0]}.ussr', 'w+') as f:
@@ -199,9 +204,10 @@ class MainWindow(QMainWindow, UiMainWindow):
                     f.write('\n')
 
     def openModelParametersFromFile(self):
-        if self.anim is not None:
+        if self.isRunning:
             self.anim.pause()
-            self.initCanvas()
+            self.clearAxes()
+            self.isRunning = False
         name = QFileDialog.getOpenFileName(self, 'Открыть систему', '', '*.ussr')
         if name[0] != '':
             with open(name[0], 'r') as f:
@@ -229,16 +235,17 @@ class MainWindow(QMainWindow, UiMainWindow):
             self.planetSettingsWindow.populateTable()
 
     def openModelParametersChangerWindow(self):
-        if self.anim is not None:
+        if self.isRunning:
             self.anim.pause()
-            self.initCanvas()
+            self.clearAxes()
+            self.isRunning = False
         self.planetSettingsWindow.show()
 
     # Other functions
     def plot_data(self):
-        if self.anim is not None:
+        if self.isRunning:
             self.anim.pause()
-            self.initCanvas()
+        self.planetSettingsWindow.solarSystem.blit = []
         first = True
         for planet in self.planetSettingsWindow.solarSystem.planets:
             if first:
@@ -260,19 +267,12 @@ class MainWindow(QMainWindow, UiMainWindow):
                                       self.planetSettingsWindow.solarSystem.timeLimit / self.planetSettingsWindow.solarSystem.dt),
                                   repeat=False, blit=True)
         self.MplWidget.canvas.draw()
+        self.isRunning = True
 
-    def initCanvas(self):
-        self.anim = None
-        AU = 1.5e11
-        self.MplWidget.canvas.ax.clear()
-        self.MplWidget.canvas.ax = self.MplWidget.canvas.fig.add_subplot(111, projection='3d')
-        self.MplWidget.canvas.ax.axis('auto')
-        axis_size = 10
-        self.MplWidget.canvas.ax.set_xlim(-axis_size * AU, axis_size * AU)
-        self.MplWidget.canvas.ax.set_ylim(-axis_size * AU, axis_size * AU)
-        self.MplWidget.canvas.ax.set_zlim(-axis_size * AU, axis_size * AU)
-        self.MplWidget.canvas.ax.set_xlabel('x')
-        self.MplWidget.canvas.ax.set_ylabel('y')
+    def clearAxes(self):
+        for i in self.planetSettingsWindow.solarSystem.blit:
+            i.remove()
+        self.planetSettingsWindow.solarSystem.blit = []
 
     def updateData(self, i):
         artists = self.planetSettingsWindow.solarSystem.updateCanvas(i)

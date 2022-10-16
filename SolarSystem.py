@@ -50,7 +50,12 @@ class SolarSystem:
         self.calculateStep()
         for index in range(len(self.planets)):
             self.planets[index].update()
-            self.blit[index].set_data_3d(self.planets[index].point.x, self.planets[index].point.y, self.planets[index].point.z)
+            try:
+                self.blit[index].set_data_3d(self.planets[index].point.x, self.planets[index].point.y,
+                                             self.planets[index].point.z)
+            except:
+                print(self.blit[index])
+                print(index)
         self.blit[-1].set_text(f'Frame: {i}/{self.timeLimit / self.dt}')
         return self.blit
 
