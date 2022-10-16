@@ -245,7 +245,6 @@ class MainWindow(QMainWindow, UiMainWindow):
     def plot_data(self):
         if self.isRunning:
             self.anim.pause()
-        self.planetSettingsWindow.solarSystem.blit = []
         first = True
         for planet in self.planetSettingsWindow.solarSystem.planets:
             if first:
