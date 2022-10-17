@@ -107,6 +107,14 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
 
     def populateTable(self):
         tablerow = 0
+        data = [0, 23297.8704870374, 16474.0822085901,
+                13451.0317972361, 11648.9352435187,
+                10419.1244280004, 9511.31579778152,
+                8805.76734087033, 8237.04110429505,
+                7765.95682901247, 7367.43353706546,
+                7024.57225634525, 6725.51589861805,
+                6461.66666539482, 6226.61780028044,
+                6015.48429322621, 5824.46762175936]
         if self.newSystem:
             self.planetsTable.setRowCount(self.planetNumber)
             self.solarSystem.planets = []
@@ -116,7 +124,10 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
                 self.planetsTable.setItem(tablerow, 2, QTableWidgetItem(str(0)))
                 self.planetsTable.setItem(tablerow, 3, QTableWidgetItem(str(0)))
                 self.planetsTable.setItem(tablerow, 4, QTableWidgetItem(str(0)))
-                self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(30000 * abs(1 - 2 ** i) - 1000 * i)))
+                if i < len(data):
+                    self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(data[i])))
+                else:
+                    self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(data[len(data)-1] - 500)))
                 self.planetsTable.setItem(tablerow, 6, QTableWidgetItem(str(0)))
                 self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(str(1.2166E30 - 1E29 * i)))
                 tablerow += 1
