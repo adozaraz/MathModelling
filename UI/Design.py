@@ -107,7 +107,7 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
 
     def populateTable(self):
         tablerow = 0
-        data = [0, 23297.8704870374, 16474.0822085901,
+        dataVel = [0, 23297.8704870374, 16474.0822085901,
                 13451.0317972361, 11648.9352435187,
                 10419.1244280004, 9511.31579778152,
                 8805.76734087033, 8237.04110429505,
@@ -115,6 +115,14 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
                 7024.57225634525, 6725.51589861805,
                 6461.66666539482, 6226.61780028044,
                 6015.48429322621, 5824.46762175936]
+        dataMas = [1.2166E30, 6.083E24, 1.2166E25,
+                   1.8249E25, 2.4332E25,
+                   3.0415E25, 3.6498E25,
+                   4.2581E25, 4.8664E25,
+                   5.4747E25, 6.083E25,
+                   6.6913E25, 7.2996E25,
+                   7.9079E25, 8.5162E25,
+                   9.1245E25, 9.7328E25]
         if self.newSystem:
             self.planetsTable.setRowCount(self.planetNumber)
             self.solarSystem.planets = []
@@ -124,12 +132,13 @@ class PlanetSettings(QMainWindow, UiPlanetSettings):
                 self.planetsTable.setItem(tablerow, 2, QTableWidgetItem(str(0)))
                 self.planetsTable.setItem(tablerow, 3, QTableWidgetItem(str(0)))
                 self.planetsTable.setItem(tablerow, 4, QTableWidgetItem(str(0)))
-                if i < len(data):
-                    self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(data[i])))
+                if i < len(dataVel):
+                    self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(dataVel[i])))
+                    self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(str(dataMas[i])))
                 else:
-                    self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(data[len(data)-1] - 500)))
+                    self.planetsTable.setItem(tablerow, 5, QTableWidgetItem(str(dataVel[len(dataVel)-1] - (500+100*i))))
+                    self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(str(dataMas[len(dataMas)-1] - (1E26+1E25*i))))
                 self.planetsTable.setItem(tablerow, 6, QTableWidgetItem(str(0)))
-                self.planetsTable.setItem(tablerow, 7, QTableWidgetItem(str(1.2166E30 - 1E29 * i)))
                 tablerow += 1
         else:
             self.planetsTable.setRowCount(len(self.solarSystem.planets))
